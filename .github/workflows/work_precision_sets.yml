@@ -28,6 +28,9 @@ jobs:
         python benchmarks/work_precision_sets/time_vs_no_of_states.py
         python benchmarks/work_precision_sets/time_vs_reltols.py
         python benchmarks/work_precision_sets/time_vs_abstols.py
+        python benchmarks/work_precision_sets/comsol_comparison.py
+        python benchmarks/work_precision_sets/ecker_comparison.py
+        python benchmarks/work_precision_sets/discharge_curve.py
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
