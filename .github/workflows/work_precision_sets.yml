@@ -1,0 +1,50 @@
+name: Generate work precision sets
+
+on:
+  repository_dispatch:
+    types: [push,release]
+    
+jobs:
+
+  benchmarks_on_push:
+    if: github.event.action == 'push'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    - name: Get commit hash
+      run: echo "COMMIT_HASH=${{ github.event.client_payload.message.commit_hash }}" >> $GITHUB_ENV
+    - name: Get current date
+      run: echo "VERSION=$(date +'%y.%-m')" >> $GITHUB_ENV
+    - name: Install PyBaMM
+      run: python -m pip install pybamm==${{ env.VERSION }}
+    - name: Run time_vs_* benchmarks for PyBaMM develop - ${{ env.COMMIT_HASH }}
+      run: |
+        python benchmarks/work_precision_sets/time_vs_dt_max.py
+        python benchmarks/work_precision_sets/time_vs_mesh_size.py
+        python benchmarks/work_precision_sets/time_vs_no_of_states.py
+        python benchmarks/work_precision_sets/time_vs_reltols.py
+        python benchmarks/work_precision_sets/time_vs_abstols.py
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        delete-branch: true
+        branch-suffix: short-commit-hash
+        commit-message: Work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }}
+        title: Work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }}
+        body: |
+            Update work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }} in `release_work_precision_sets.md`
+  benchmarks on release:
+    if: github.event.action == 'release'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    - name: print commit hash
+      run: echo ${{ github.event.client_payload.message.commit_hash }}
