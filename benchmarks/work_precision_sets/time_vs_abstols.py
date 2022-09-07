@@ -98,7 +98,7 @@ plt.gca().legend(
 )
 
 
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_abstols/time_vs_abstols_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"./benchmarks/benchmark_images/time_vs_abstols_{pybamm.__version__}.png")
 
 
 # content = f"# PyBaMM {pybamm.__version__}\n## Solve Time vs Abstols\n<img src='./benchmark_images/time_vs_abstols_{pybamm.__version__}.png'>\n"  # noqa

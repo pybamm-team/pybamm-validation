@@ -62,7 +62,7 @@ ax2.legend(["DFN", "Experiment"], loc="best")
 
 plt.tight_layout()
 os.chdir(owd)
-plt.savefig(f"benchmarks/benchmark_images/ecker_comparison/ecker_comparison_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"benchmarks/benchmark_images/ecker_comparison_{pybamm.__version__}.png")
 
 
 # content = f"# PyBaMM {pybamm.__version__}\n## Ecker comparison\n<img src='./benchmark_images/ecker_comparison_{pybamm.__version__}.png'>\n"  # noqa

@@ -101,7 +101,7 @@ plt.gca().legend(
     parameters,
     loc="upper right",
 )
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_dt_max/time_vs_dt_max_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"./benchmarks/benchmark_images/time_vs_dt_max_{pybamm.__version__}.png")
 
 
 # content = f"## Solve Time vs dt_max\n<img src='./benchmark_images/time_vs_dt_max_{pybamm.__version__}.png'>\n"  # noqa

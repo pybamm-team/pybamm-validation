@@ -104,7 +104,7 @@ plt.gca().legend(
     loc="lower right",
 )
 
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_reltols/time_vs_reltols_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"./benchmarks/benchmark_images/time_vs_reltols_{pybamm.__version__}.png")
 
 
 # content = f"## Solve Time vs Reltols\n<img src='./benchmark_images/time_vs_reltols_{os.getenv('COMMIT_HASH')}.png'>\n"  # noqa

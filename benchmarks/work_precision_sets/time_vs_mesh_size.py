@@ -78,7 +78,7 @@ plt.gca().legend(
     parameters,
     loc="upper right",
 )
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_mesh_size/time_vs_mesh_size_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"./benchmarks/benchmark_images/time_vs_mesh_size_{pybamm.__version__}.png")
 
 
 # content = f"## Solve Time vs Mesh size\n<img src='./benchmark_images/time_vs_mesh_size_{os.getenv('COMMIT_HASH')}.png'>\n"  # noqa

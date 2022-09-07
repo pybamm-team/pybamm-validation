@@ -82,7 +82,7 @@ plt.gca().legend(
 )
 
 plt.savefig(
-    f"./benchmarks/benchmark_images/time_vs_no_of_states/time_vs_no_of_states_{os.getenv('COMMIT_HASH')}.png"
+    f"./benchmarks/benchmark_images/time_vs_no_of_states_{pybamm.__version__}.png"
 )
 
 

@@ -108,7 +108,7 @@ plt.subplots_adjust(
 )
 # plt.show()
 os.chdir(owd)
-plt.savefig(f"./benchmarks/benchmark_images/discharge_curve/discharge_curve_{os.getenv('COMMIT_HASH')}.png")
+plt.savefig(f"./benchmarks/benchmark_images/discharge_curve_{pybamm.__version__}.png")
 
 # content = f"## Discharge curve\n<img src='./benchmark_images/discharge_curve_{pybamm.__version__}.png'>\n"  # noqa
 
