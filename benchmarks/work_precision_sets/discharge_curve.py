@@ -5,10 +5,6 @@ import pickle
 import matplotlib.pyplot as plt
 
 
-owd = os.getcwd()
-# change working directory to the root of pybamm
-os.chdir(pybamm.root_dir())
-
 # dictionary of available comsol results
 C_rates = {"01": 0.1, "05": 0.5, "1": 1, "2": 2, "3": 3}
 
@@ -60,7 +56,7 @@ for key, C_rate in C_rates.items():
     current = 24 * C_rate
     # load the comsol results
     comsol_results_path = pybamm.get_parameters_filepath(
-        "input/comsol_results/comsol_{}C.pickle".format(key)
+        "benchmarks/comsol_results/comsol_{}C.pickle".format(key)
     )
     comsol_variables = pickle.load(open(comsol_results_path, "rb"))
     comsol_time = comsol_variables["time"]
@@ -107,7 +103,7 @@ plt.subplots_adjust(
     top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25, wspace=0.35
 )
 # plt.show()
-os.chdir(owd)
+
 plt.savefig(f"./benchmarks/benchmark_images/discharge_curve_{pybamm.__version__}.png")
 
 # content = f"## Discharge curve\n<img src='./benchmark_images/discharge_curve_{pybamm.__version__}.png'>\n"  # noqa

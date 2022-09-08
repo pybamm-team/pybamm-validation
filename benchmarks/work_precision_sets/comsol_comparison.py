@@ -4,10 +4,6 @@ import pickle
 import scipy.interpolate as interp
 
 
-owd = os.getcwd()
-# change working directory to the root of pybamm
-os.chdir(pybamm.root_dir())
-
 "-----------------------------------------------------------------------------"
 "Pick C_rate and load comsol data"
 
@@ -19,7 +15,7 @@ C_rate = "1"  # choose the key from the above dictionary of available results
 
 # load the comsol results
 comsol_results_path = pybamm.get_parameters_filepath(
-    "input/comsol_results/comsol_{}C.pickle".format(C_rate)
+    "benchmarks/comsol_results/comsol_{}C.pickle".format(C_rate)
 )
 comsol_variables = pickle.load(open(comsol_results_path, "rb"))
 
@@ -150,8 +146,10 @@ plot = pybamm.QuickPlot(
 # plot.dynamic_plot()
 plot.plot(500)
 
-os.chdir(owd)
-plot.fig.savefig(f"./benchmarks/benchmark_images/comsol_comparison_{pybamm.__version__}.png", dpi=300)
+
+plot.fig.savefig(
+    f"./benchmarks/benchmark_images/comsol_comparison_{pybamm.__version__}.png", dpi=300
+)
 
 # content = f"## Comsol comparison\n<img src='./benchmark_images/comsol_comparison_{pybamm.__version__}.png'>\n"  # noqa
 
