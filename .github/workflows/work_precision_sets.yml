@@ -17,20 +17,16 @@ jobs:
         python-version: 3.9
     - name: Get commit hash
       run: echo "COMMIT_HASH=${{ github.event.client_payload.message.commit_hash }}" >> $GITHUB_ENV
-    - name: Install PyBaMM
-      run: |
-        python -m pip install wheel
-        python -m pip install git+https://github.com/pybamm-team/PyBaMM@develop
+    - name: Install dependencies
+      run: sudo apt install libopenblas-dev gcc gfortran
     - name: Run time_vs_* benchmarks for PyBaMM develop - ${{ env.COMMIT_HASH }}
       run: |
-        python benchmarks/work_precision_sets/time_vs_dt_max.py
-        python benchmarks/work_precision_sets/time_vs_mesh_size.py
-        python benchmarks/work_precision_sets/time_vs_no_of_states.py
-        python benchmarks/work_precision_sets/time_vs_reltols.py
-        python benchmarks/work_precision_sets/time_vs_abstols.py
-        python benchmarks/work_precision_sets/comsol_comparison.py
-        python benchmarks/work_precision_sets/ecker_comparison.py
-        python benchmarks/work_precision_sets/discharge_curve.py
+        python -m pip install wheel
+        git clone -b develop --single-branch https://github.com/pybamm-team/PyBaMM
+        cd PyBaMM
+        pip install wget tox
+        tox -e pybamm-requires
+        tox -e benchmarks
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
