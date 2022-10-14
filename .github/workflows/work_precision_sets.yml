@@ -35,7 +35,6 @@ jobs:
         python -m pip install .
     - name: Run time_vs_* benchmarks for PyBaMM develop - ${{ env.COMMIT_HASH }}
       run: |
-        cd ..
         python benchmarks/work_precision_sets/time_vs_dt_max.py
         python benchmarks/work_precision_sets/time_vs_mesh_size.py
         python benchmarks/work_precision_sets/time_vs_no_of_states.py
