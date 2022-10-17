@@ -17,10 +17,22 @@ jobs:
         python-version: 3.9
     - name: Get commit hash
       run: echo "COMMIT_HASH=${{ github.event.client_payload.message.commit_hash }}" >> $GITHUB_ENV
-    - name: Install PyBaMM
+    - name: Install dependencies
       run: |
+        sudo apt install libopenblas-dev gcc gfortran
         python -m pip install wheel
-        python -m pip install git+https://github.com/pybamm-team/PyBaMM@develop
+        git clone -b develop --single-branch https://github.com/pybamm-team/PyBaMM
+        python -m pip install cmake casadi numpy
+        pip install wget
+        cd PyBaMM
+        python ./scripts/install_KLU_Sundials.py
+        git clone https://github.com/pybind/pybind11.git ./pybind11
+    - name: Set env variables and install PyBaMM
+      run: |
+        echo "SUNDIALS_INST=$HOME/.local" >> $GITHUB_ENV
+        echo "LD_LIBRARY_PATH=$HOME/.local/lib" >> $GITHUB_ENV
+        cd PyBaMM
+        python -m pip install .
     - name: Run time_vs_* benchmarks for PyBaMM develop - ${{ env.COMMIT_HASH }}
       run: |
         python benchmarks/work_precision_sets/time_vs_dt_max.py
