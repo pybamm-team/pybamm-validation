@@ -2,7 +2,7 @@ name: Generate work precision sets
 
 on:
   repository_dispatch:
-    types: [release]
+    types: [release, workflow_dispatch]
     
 jobs:
   benchmarks:
