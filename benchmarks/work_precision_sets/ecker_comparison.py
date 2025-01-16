@@ -70,9 +70,9 @@ os.chdir(owd)
 plt.savefig(f"benchmarks/benchmark_images/ecker_comparison_{pybamm.__version__}.png")
 
 
-# content = f"# PyBaMM {pybamm.__version__}\n## Ecker comparison\n<img src='./benchmark_images/ecker_comparison_{pybamm.__version__}.png'>\n"  # noqa
+content = f"# PyBaMM {pybamm.__version__}\n## Ecker comparison\n<img src='./benchmarks/benchmark_images/ecker_comparison_{pybamm.__version__}.png'>\n"  # noqa
 
-# with open("./benchmarks/validation.md", "r") as original:
-#     data = original.read()
-# with open("./benchmarks/validation.md", "w") as modified:
-#     modified.write(f"{content}\n{data}")
+with open("./README.md", "r") as original:
+    data = original.read()
+with open("./README.md", "w") as modified:
+    modified.write(f"{content}\n{data}")

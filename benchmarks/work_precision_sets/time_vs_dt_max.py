@@ -1,4 +1,3 @@
-import os
 import pybamm
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,11 +39,8 @@ for ax, model_, model_name in zip(
     models.values(),
     models,
 ):
-
     for params in parameters:
-
         time_points = []
-        # solver = pybamm.CasadiSolver()
 
         model = model_.new_copy()
         c_rate = 10
@@ -75,14 +71,12 @@ for ax, model_, model_name in zip(
         disc.process_model(model)
 
         for t in dt_max:
-
             solver = pybamm.CasadiSolver(dt_max=t)
 
             solver.solve(model, t_eval=t_eval)
             time = 0
             runs = 20
-            for k in range(0, runs):
-
+            for _ in range(0, runs):
                 solution = solver.solve(model, t_eval=t_eval)
                 time += solution.solve_time.value
             time = time / runs
@@ -101,12 +95,12 @@ plt.gca().legend(
     parameters,
     loc="upper right",
 )
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_dt_max_{pybamm.__version__}.png")
+plt.savefig(f"benchmarks/benchmark_images/time_vs_dt_max_{pybamm.__version__}.png")
 
 
-# content = f"## Solve Time vs dt_max\n<img src='./benchmark_images/time_vs_dt_max_{pybamm.__version__}.png'>\n"  # noqa
+content = f"## Solve Time vs dt_max\n<img src='./benchmarks/benchmark_images/time_vs_dt_max_{pybamm.__version__}.png'>\n"
 
-# with open("./benchmarks/release_work_precision_sets.md", "r") as original:
-#     data = original.read()
-# with open("./benchmarks/release_work_precision_sets.md", "w") as modified:
-#     modified.write(f"{content}\n{data}")
+with open("./README.md") as original:
+    data = original.read()
+with open("./README.md", "w") as modified:
+    modified.write(f"{content}\n{data}")

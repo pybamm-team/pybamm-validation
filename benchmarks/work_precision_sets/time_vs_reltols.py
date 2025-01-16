@@ -1,5 +1,4 @@
 import pybamm
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
@@ -42,17 +41,20 @@ for ax, i, j in zip(
     itertools.product(solvers.values(), models.values()),
     itertools.product(solvers, models),
 ):
-
     for params in parameters:
-
         time_points = []
         solver = i[0]
 
         model = i[1].new_copy()
         c_rate = 1
         tmax = 3500 / c_rate
-        nb_points = 500
-        t_eval = np.linspace(0, tmax, nb_points)
+        if solver.supports_interp:
+            t_eval = np.array([0, tmax])
+            t_interp = None
+        else:
+            nb_points = 500
+            t_eval = np.linspace(0, tmax, nb_points)
+            t_interp = None
         geometry = model.default_geometry
 
         # load parameter values and process model and geometry
@@ -77,14 +79,12 @@ for ax, i, j in zip(
         disc.process_model(model)
 
         for tol in reltols:
-
             solver.rtol = tol
-            solver.solve(model, t_eval=t_eval)
+            solver.solve(model, t_eval=t_eval, t_interp=t_interp)
             time = 0
             runs = 20
-            for k in range(0, runs):
-
-                solution = solver.solve(model, t_eval=t_eval)
+            for _ in range(0, runs):
+                solution = solver.solve(model, t_eval=t_eval, t_interp=t_interp)
                 time += solution.solve_time.value
             time = time / runs
 
@@ -104,12 +104,12 @@ plt.gca().legend(
     loc="lower right",
 )
 
-plt.savefig(f"./benchmarks/benchmark_images/time_vs_reltols_{pybamm.__version__}.png")
+plt.savefig(f"benchmarks/benchmark_images/time_vs_reltols_{pybamm.__version__}.png")
 
 
-# content = f"## Solve Time vs Reltols\n<img src='./benchmark_images/time_vs_reltols_{os.getenv('COMMIT_HASH')}.png'>\n"  # noqa
+content = f"## Solve Time vs Reltols\n<img src='./benchmarks/benchmark_images/time_vs_reltols_{pybamm.__version__}.png'>\n"
 
-# with open("./benchmarks/release_work_precision_sets.md", "r") as original:
-#     data = original.read()
-# with open("./benchmarks/release_work_precision_sets.md", "w") as modified:
-#     modified.write(f"{content}\n{data}")
+with open("./README.md") as original:
+    data = original.read()
+with open("./README.md", "w") as modified:
+    modified.write(f"{content}\n{data}")

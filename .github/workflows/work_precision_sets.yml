@@ -2,39 +2,24 @@ name: Generate work precision sets
 
 on:
   repository_dispatch:
-    types: [push,release]
+    types: [release]
     
 jobs:
-
-  benchmarks_on_push:
-    if: github.event.action == 'push'
+  benchmarks:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Setup python
-      uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
-        python-version: 3.9
-    - name: Get commit hash
-      run: echo "COMMIT_HASH=${{ github.event.client_payload.message.commit_hash }}" >> $GITHUB_ENV
-    - name: Install dependencies
+        python-version: 3.12
+    - name: Install pybamm
       run: |
-        sudo apt install libopenblas-dev gcc gfortran
-        python -m pip install wheel
-        git clone -b develop --single-branch https://github.com/pybamm-team/PyBaMM
-        python -m pip install cmake casadi numpy
-        pip install wget
-        cd PyBaMM
-        python ./scripts/install_KLU_Sundials.py
-        git clone https://github.com/pybind/pybind11.git ./pybind11
-    - name: Set env variables and install PyBaMM
-      run: |
-        echo "SUNDIALS_INST=$HOME/.local" >> $GITHUB_ENV
-        echo "LD_LIBRARY_PATH=$HOME/.local/lib" >> $GITHUB_ENV
+        git clone --depth 1 --branch ${{ env.VERSION }} https://github.com/pybamm-team/PyBaMM
         cd PyBaMM
         python -m pip install .
     - name: Run time_vs_* benchmarks for PyBaMM develop - ${{ env.COMMIT_HASH }}
       run: |
+        cd ..
         python benchmarks/work_precision_sets/time_vs_dt_max.py
         python benchmarks/work_precision_sets/time_vs_mesh_size.py
         python benchmarks/work_precision_sets/time_vs_no_of_states.py
@@ -43,60 +28,17 @@ jobs:
         python benchmarks/work_precision_sets/comsol_comparison.py
         python benchmarks/work_precision_sets/ecker_comparison.py
         python benchmarks/work_precision_sets/discharge_curve.py
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        delete-branch: true
-        branch-suffix: short-commit-hash
-        commit-message: Work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }}
-        title: Work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }}
-        body: |
-            Update work precision sets for PyBaMM develop - ${{ env.COMMIT_HASH }} in `release_work_precision_sets.md`
-  benchmarks_on_release:
-    if: github.event.action == 'release'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-    - name: Install pybamm
-      run: |
-        pip install -U pybamm
-    - name: Update Release
+    - name: Update README
       run: |
         python -c "from make_release import get_release, get_version; get_release(); get_version()"
         echo ${{ env.VERSION }}
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}      
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.VERSION }}
         body_path: README.md
-  update_readme:
-    needs: benchmarks_on_release
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-    - name: Install pybamm
-      run: |
-        pip install -U pybamm
-    - name: Update Readme
-      run: |
-        python -c "from make_release import update_readme, get_version; update_readme(); get_version()"
-        echo ${{ env.VERSION }}
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        delete-branch: true
-        branch-suffix: short-commit-hash
-        commit-message: Update README for PyBaMM - v${{ env.VERSION }}
-        title: Update README for PyBaMM  - v${{ env.VERSION }}
-        body: |
-            Make sure that a new release has been automatically created before merging this PR.
-
-    

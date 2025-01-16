@@ -1,4 +1,3 @@
-import os
 import pybamm
 import matplotlib.pyplot as plt
 import itertools
@@ -17,6 +16,7 @@ models = {"SPM": pybamm.lithium_ion.SPM(), "DFN": pybamm.lithium_ion.DFN()}
 npts = [4, 8, 16, 32, 64]
 
 solvers = {
+    "IDAKLUSolver": pybamm.IDAKLUSolver(),
     "Casadi - safe": pybamm.CasadiSolver(),
     "Casadi - fast": pybamm.CasadiSolver(mode="fast"),
 }
@@ -29,7 +29,6 @@ for ax, i, j in zip(
     itertools.product(solvers.values(), models.values()),
     itertools.product(solvers, models),
 ):
-
     for params in parameters:
         time_points = []
         ns = []
@@ -43,7 +42,6 @@ for ax, i, j in zip(
         i = list(i)
 
         for N in npts:
-
             var_pts = {
                 "x_n": N,  # negative electrode
                 "x_s": N,  # separator
@@ -57,8 +55,7 @@ for ax, i, j in zip(
 
             time = 0
             runs = 20
-            for k in range(0, runs):
-
+            for _ in range(0, runs):
                 solution = sim.solve([0, 3500])
                 time += solution.solve_time.value
             time = time / runs
@@ -82,13 +79,13 @@ plt.gca().legend(
 )
 
 plt.savefig(
-    f"./benchmarks/benchmark_images/time_vs_no_of_states_{pybamm.__version__}.png"
+    f"benchmarks/benchmark_images/time_vs_no_of_states_{pybamm.__version__}.png"
 )
 
 
-# content = f"## Solve Time vs Number of states\n<img src='./benchmark_images/time_vs_no_of_states_{os.getenv('COMMIT_HASH')}.png'>\n"  # noqa
+content = f"## Solve Time vs Number of states\n<img src='./benchmarks/benchmark_images/time_vs_no_of_states_{pybamm.__version__}.png'>\n"
 
-# with open("./benchmarks/release_work_precision_sets.md", "r") as original:
-#     data = original.read()
-# with open("./benchmarks/release_work_precision_sets.md", "w") as modified:
-#     modified.write(f"{content}\n{data}")
+with open("./README.md") as original:
+    data = original.read()
+with open("./README.md", "w") as modified:
+    modified.write(f"{content}\n{data}")
