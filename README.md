@@ -1,8 +1,6 @@
-## Solve Time vs dt_max
-<img src='./benchmarks/benchmark_images/time_vs_dt_max_25.1.0.png'>
-
 # PyBaMM validation
-Benchmarks corresponding to the latest commit on develop branch in the PyBaMM repository
+
+Benchmarks corresponding to the latest release in the PyBaMM repository
 
 ## Solve Time vs Abstols
 <img src='./benchmarks/benchmark_images/time_vs_abstols_22.9.png'>
