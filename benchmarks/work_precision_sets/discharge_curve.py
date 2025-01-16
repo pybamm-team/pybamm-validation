@@ -83,7 +83,7 @@ for key, C_rate in C_rates.items():
     voltage_difference = np.abs(voltage_sol[0:end_index] - comsol_voltage[0:end_index])
 
     # plot discharge curves and absolute voltage_difference
-    color = ax.get_lines().get_color()
+    color = next(ax._get_lines.prop_cycler)["color"]
     discharge_curve.plot(
         comsol_discharge_capacity, comsol_voltage, color=color, linestyle=":"
     )
