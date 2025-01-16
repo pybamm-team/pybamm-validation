@@ -13,7 +13,7 @@ jobs:
       with:
         python-version: 3.12
     - name: Install pybamm
-      run: python -m pip install -U pybamm
+      run: python -m pip install -U "pybamm[all,jax]"
     - name: Run time_vs_* benchmarks for PyBaMM
       run: |
         python benchmarks/work_precision_sets/time_vs_dt_max.py
