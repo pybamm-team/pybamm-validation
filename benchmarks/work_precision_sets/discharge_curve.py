@@ -106,7 +106,7 @@ plt.subplots_adjust(
 
 plt.savefig(f"./benchmarks/benchmark_images/discharge_curve_{pybamm.__version__}.png")
 
-content = f"## Discharge curve\n<img src='./benchmark_images/discharge_curve_{pybamm.__version__}.png'>\n"  # noqa
+content = f"## Discharge curve\n<img src='./benchmarks/benchmark_images/discharge_curve_{pybamm.__version__}.png'>\n"  # noqa
 
 with open("./README.md", "r") as original:
     data = original.read()
