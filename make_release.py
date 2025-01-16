@@ -6,7 +6,6 @@ def get_release():
     readme = open("./README.md", "r")
     contents = readme.readlines()
     readme.close()
-    contents = contents[2:]
 
     contents.insert(0, f"# PyBaMM validation - {pybamm.__version__}\n")
 
