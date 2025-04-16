@@ -1,4 +1,4 @@
-# PyBaMM validation - 25.1.1
+# PyBaMM validation - 25.4.0
 ## Discharge curve
-<img src='./benchmarks/benchmark_images/discharge_curve_25.1.1.png'>
+<img src='./benchmarks/benchmark_images/discharge_curve_25.4.0.png'>
 
